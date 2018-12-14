@@ -1,0 +1,21 @@
+.menu {
+    background-color:  #D5B0AC;
+    color: #402E2A;
+    /* height: 50px; */
+    width: 250px;
+    font-weight: bold;
+    padding-top: 10px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+ul li{
+    padding-bottom: 5px;
+}
+.menu span:hover{
+    color: #FFFFFF;
+    background-color: #9CD08F;
+}
