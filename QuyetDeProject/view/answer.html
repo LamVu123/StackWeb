@@ -1,49 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Quyết đê</title>
 </head>
-
 <body>
-    <h1 id="content">Nội dung câu hỏi</h1>
-    <button id="yes" class="btn-answer" data-questionid="">Đúng/Có/Phải</button>
-    <button id="no" class="btn-answer" data-questionid="">Sai/Không/Trái</button>
-    <button>Nothing</button>
-    <button class="btn-answer">Xem kết quả</button>
+	<h1 id="content"></h1>
+	<button id="yes" class="btn-answer" data-questionid="">Đúng/Có/Phải</button>
+	<button id="no" class="btn-answer" data-questionid="">Sai/Không/Trái</button>
+	<button><a href="/">Xem câu hỏi khác</a></button>
+	<button class="btn-result" data-questionid="">Xem kết quả</button>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script>
+		$(".btn-answer").click(function() {
+			const vote = $(this).attr("id");
+			const questionId = $(".btn-answer").attr("data-questionid");
+			$.ajax({
+				url: "/vote/" + questionId + "/" + vote,
+				type: "GET",
+				success: function(data) {
+					window.location.href = "/question/"+questionId;
+				},
+				error: function(err) {
+					console.log("Error!!!", err);
+				}
+			});
+		});
+		
+		$.ajax({
+			url: "/api/random",
+			type: "GET",
+			success: function(data) {
+				console.log(data.question);
+				$("#content").text(data.question.content);
+				$(".btn-answer").attr("data-questionid", data.question._id);
+				$(".btn-result").attr("data-questionid", data.question._id);
+			},
+			error: function(err) {
+				console.log("Error!!!", err);
+			}
+		});
+
+		$(".btn-result").click(function() {
+			const questionId = $(".btn-answer").attr("data-questionid");
+			$.ajax({
+				url: "/vote/" + questionId,
+				type: "GET",
+				success: function(data) {
+					window.location.href = "/question/"+questionId;
+				},
+				error: function(err) {
+					console.log("Error!!!", err);
+				}
+			});
+		});
+
+	</script>
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-    $(".btn-answer").click(function () {
-        const vote = $(this).attr("id");
-        const questionId = $(".btn-answer").attr("data-questionid");
-        $.ajax({
-            url: "/vote/" + questionId + "/" + vote,
-            type: "GET",
-            success: function (data) {
-                window.location.href = "/question/" + questionId;
-            },
-            error: function (err) {
-                console.log("Error!!!", err);
-            }
-        })
-    })  
-    $.ajax({
-        url: "http://localhost:6969/api/random",
-        type: "GET",
-        success: function (data) {
-            console.log(data.question);
-            $("#content").text(data.question.content);
-            $(".btn-answer").attr("data-questionid", data.question.id);
-        },
-        error: function (err) {
-            console.log("Error!!!", err);
-        }
-
-    })
-</script>
-
 </html>

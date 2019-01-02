@@ -1,112 +1,155 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const mongoose = require("mongoose");
 const app = express();
 
-// register for bodyParser. Using: request.body.[...]
+mongoose.connect("mongodb://localhost:27017/quyetde-17", { useNewUrlParser: true }, (err) => {
+	if (err) console.log("Error DB connection!!!");
+	else console.log("Connect DB success!!!");
+});
+
+const questionModel = require("./models/questionModel");
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// load to homepage
-// app.get("/", (request, respone) => {
-//     const question =JSON.parse(fs.readFileSync("./question.json",{encoding: "utf-8"}));
-//     if (question.length == 0) respone.send("Chưa có câu hỏi nào");
-//     else{
-//         const randomQues = question[Math.floor(Math.random()*question.length)];
-//         respone.send(`<h1> ${randomQues.content} </h1>
-//         <form action="/vote${randomQues.id}" method="POST">
-//         <button name="btnVote" value = "1">Đúng</button>
-//         <button name="btnVote" value = "0">Sai</button>
-//         </form>`);
-//     }
-
-// });
-
-app.get("/", (request, respone) => {
-    // const question =JSON.parse(fs.readFileSync("./question.json",{encoding: "utf-8"}));
-    // if (question.length == 0) respone.send("Chưa có câu hỏi nào");
-    // else{
-        //const randomQues = question[Math.floor(Math.random()*question.length)];
-        // respone.send(`<h1> ${randomQues.content} </h1>
-        // <a href= "/vote/${randomQues.id}/yes"><button>Đúng</button></a>
-        // <a href= "/vote/${randomQues.id}/no"><button>Sai</button></a>
-        // `);
-        respone.sendFile(__dirname + "/view/answer.html")
-    //}
-
+// request GET => http://localhost:6969/
+app.get("/", (req, res) => {
+	// Lay ra cau hoi random
+	// const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8" }));
+	// if(questions.length == 0) res.send("Chưa có câu hỏi nào!!!")
+	// else {
+	// 	const randomQuestion = questions[Math.floor(Math.random()*questions.length)];
+	// 	// res.send(
+	// 	// 	`<h1> ${randomQuestion.content} </h1>
+	// 	// 	<a href="/vote/${randomQuestion.id}/yes"><button>Đúng/Có/Phải</button></a>
+	// 	// 	<a href="/vote/${randomQuestion.id}/no"><button>Sai/Không/Trái</button></a>`
+	// 	// );
+	// 	res.sendFile(__dirname + "/view/answer.html");
+	// }
+	// "abc" + variable + "xyz" == `abc${variable}xyz`
+	res.sendFile(__dirname + "/view/answer.html");
 });
-app.get("/question/:questionId", (req, res) => {
-    const questionId = req.params.questionId;
-    const question = JSON.parse(fs.readFileSync("./question.json", {encoding: "utf-8"}));
-    res.send(question[questionId])
-})
-
 
 app.get("/api/random", (req, res) => {
-    const question = JSON.parse(fs.readFileSync("./question.json", {encoding: "utf-8"}));
-    const randomQuestion = question[Math.floor(Math.random()*question.length)];
-    res.send({ question: randomQuestion });
+	// const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8" }));
+	// const randomQuestion = questions[Math.floor(Math.random()*questions.length)];
+	// res.send({ question: randomQuestion }); // data = { question: randomQuestion }
+
+	//MongoDB
+	questionModel.find({}, function (err, data) {
+		if (err) console.log(err);
+		else {
+			const randomQuestion = data[Math.floor(Math.random() * data.length)];
+			res.send({ question: randomQuestion });
+		}
+	})
 });
 
+app.get("/api/question/:questionId", (req, res) => {
+	const questionId = req.params.questionId;
+	let questionFound;
+	//let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8" }));
+	// questions.forEach(question => {
+	// 	if (question.id == questionId) {
+	// 		questionFound = question;
+	// 	}
+	// });
+	questionModel.findById(questionId, function (err, data) {
+		if (err) console.log(err);
+		else {
+			res.send({ question: data });
+		}
+	});
+});
+
+// /vote/questionId/yes-no
 app.get("/vote/:questionId/:vote", (req, res) => {
-    const questions =JSON.parse(fs.readFileSync("./question.json",{encoding: "utf-8"}));
-    const vote = req.params.vote;
-    const questionId = req.params.questionId;
-    questions.forEach((ques, index) => {
-        if (ques.id == questionId) {
-            if(vote == "yes")
-            questions[index].yes++;
-            else 
-            questions[index].no++;
-        }
-    });
-    fs.writeFileSync("./question.json",JSON.stringify(questions));
-    res.redirect("/");
+	// param
+	const questionId = req.params.questionId;
+	const vote = req.params.vote; // yes || no
+	//let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8" }));
+	questionModel.findById(questionId, function (err, question) {
+			if (question.id == questionId) {
+				vote == 'yes'?
+				question.set({ yes: question.yes += 1 }):question.set({ no: question.no += 1 })
+				question.save();
+			} else console.log(err);
+	});
+
+	//fs.writeFileSync("./questions.json", JSON.stringify(questions));
+	res.redirect("/");
 });
 
+//result page
+app.get("/vote/:questionId", (req, res) => {
+	// param
+	// const questionId = req.params.questionId;
+	// questionModel.findById(questionId, function (err, question) {
+	// 		if (question.id == questionId) {
+	// 			vote == 'yes'?
+	// 			question.set({ yes: question.yes += 1 }):question.set({ no: question.no += 1 })
+	// 			question.save();
+	// 		} else console.log(err);
+	// });
 
+	//fs.writeFileSync("./questions.json", JSON.stringify(questions));
+	res.redirect("/");
+});
+// /question/:questionId
+app.get("/question/:questionId", (req, res) => {
+	res.sendFile(__dirname + "/view/question.html");
+});
 
-// app.post("/vote:idQues",(req,res)=>{
-//     let idQues = req.params.idQues;     //get question id
-       
-//     const questions = JSON.parse(fs.readFileSync("./question.json",{encoding:"utf-8"})); 
-//     questions.forEach((ques) => {
-//         let vote = req.body.btnVote; 
-
-//         if(ques.id == idQues){
-//             vote == "1" ? ques.yes++ : ques.no++;
-//         }
-//     });
-//     fs.writeFileSync("./question.json",JSON.stringify(questions));
-//     res.redirect("/");
+// app.get("/vote/:questionId/no", (req, res) => {
+// 	console.log(req.params.questionId);
 // });
 
-//load to page/ask
-app.get("/ask", (request, respone) => {
-    respone.sendFile(__dirname + "/view/ask.html");
+app.get("/ask", (req, res) => {
+	res.sendFile(__dirname + "/view/ask.html");
 });
 
-// set data to form
 app.post("/addquestion", (req, res) => {
-    const question =JSON.parse(fs.readFileSync("./question.json",{encoding: "utf-8"}));
-    //console.log(question);
-    const newQuestion = {
-        content: req.body.questionContent,
-        yes: 0,
-        no: 0,
-        id: question.length
-    };
-    question.push(newQuestion);
-    //console.log(question);
-    fs.writeFileSync("./question.json", JSON.stringify(question));
-    res.redirect("/");
+	//const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8" }));
+	//console.log(questions);
+	const newQuestion = {
+		content: req.body.questionContent
+		// yes: 0,
+		// no: 0,
+		// id: questions.length
+	};
+	// questions.push(newQuestion);
+	// console.log(questions);
+	// fs.writeFileSync("./questions.json", JSON.stringify(questions));
+	// res.redirect("/");
+	questionModel.create(
+		{
+			//content:req.body.questionContent
+			content: newQuestion.content
+		},
+		(err, questionCreated) => {
+			if (err) console.log(err);
+			else res.redirect("/");
+		}
+	)
 });
 
+// app.get("/about/ads", (req, res) => {
+// 	// Show ra trang CV
+// 	res.sendFile(__dirname + "/resource/index.html");
+// });
 
-//set static public area
-app.use(express.static(__dirname + '/view'));
+// app.get("/style.css", (req, res) => {
+// 	res.sendFile(__dirname + "/resource/style.css");
+// });
+
+// http://localhost:6969/about/....
+
+app.use("/about", express.static("resource"));
+app.use("/public", express.static("public"));
 
 app.listen(6969, (err) => {
-    if (err) console.log(err);
-    else console.log("OK");
-})
-
+	if (err) console.log(err)
+	else console.log("Server start success!");
+});
