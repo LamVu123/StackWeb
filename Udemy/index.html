@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    <title>Udemy</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-center">
+            <img src="./image/default-meta-image.jpg" alt="">
+        </div>
+        </br>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+        <form id="udemy" class="text-center">
+            <input type="text" id="searchInput" name="fname" style="width:300px">
+            <input type="submit" value="Search" class="ml-2 btn btn-primary font-weight-bold">
+            <br>
+            <select class="form-control d-inline" style="width:auto;" id="price">
+                <option></option>
+                <option>Free</option>
+                <option>Paid</option>
+            </select>
+        </form>
+        <div id="results" currUrl="" class="mt-5 row">
+        </div>
+        <div class="text-center mb-5" id="loading"></div>
+        <script src="loadData.js"></script>
+    </div>
+</body>
+
+</html>
