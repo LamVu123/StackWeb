@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/CreateScreen.css">
+    <link rel="stylesheet" href="/css/PlayerScreen.css">
+    <title>Play Screen</title>
+</head>
+
+<body>
+    <div class="container">
+        <h4>Score Keeper</h4>
+        <span id="title"></span>
+        <table class="table table-striped mt-5">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th scope="col" id="playerName1"></th>
+                    <th scope="col" id="playerName2"></th>
+                    <th scope="col" id="playerName3"></th>
+                    <th scope="col" id="playerName4"></th>
+                </tr>
+                <tr id="headTable">
+                    <th scope="col">Sum of Score( <span id="SumScore"></span> )</th>
+                    <th scope="col" id="sum1"></th>
+                    <th scope="col" id="sum2"></th>
+                    <th scope="col" id="sum3"></th>
+                    <th scope="col" id="sum4"></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <input type="submit" id="btnCreate" value="ADD ROUND">
+        <div class="clear">
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="/js/playScreen.js">
+
+    </script>
+
+</body>
+
+</html>

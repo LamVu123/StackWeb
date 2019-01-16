@@ -1,0 +1,38 @@
+#title {
+    border-bottom: solid gray 2px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+#title h4{
+    justify-content: left;
+}
+.container{
+    width: 70%;
+    height: auto;
+    margin-top: 20px;
+    color: #333333;
+}
+#player{
+    width: 100%;
+    margin-bottom: 10px;
+    border-color:#BF1363; 
+    border-style: solid;
+    border-width: thin;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+#btnCreate{
+    height: 40px;
+    width: 200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    background: #BF1363;
+    color: white;
+    border-radius: 10px;
+    border-style: solid;
+    border-color:#BF1363; 
+}

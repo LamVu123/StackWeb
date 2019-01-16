@@ -1,0 +1,17 @@
+#headTable{
+    background-color: #BF1363;
+    color: white;
+}
+#headTable th{
+    width: 100px
+}
+.elmInput {
+    border-radius: 5px;
+    border-style: solid;
+    border-color: gray;
+    width: 40px;
+    height: 25px;
+}
+.clear {
+    clear: both;
+}
