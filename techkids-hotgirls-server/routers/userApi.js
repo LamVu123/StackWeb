@@ -1,5 +1,6 @@
 const express = require('express');
 const UserApi = express.Router();
+const bcrypt = require('bcryptjs');
 
 const UserModel = require('../models/userModel');
 
@@ -38,6 +39,8 @@ UserApi.get('/:userId', (req, res) => {
 // Create user
 UserApi.post('/', (req, res) => {
 	const { username, password, avatar } = req.body;
+	const salt = bcrypt.genSaltSync(12); 	//12 is typical  
+	const hashPassword = bcrypt.hashSync(password,salt);
 	const newUsers = { username, password, avatar };
 	UserModel.create(newUsers)
 		.then((userCreated) => {
@@ -56,8 +59,8 @@ UserApi.put('/:userId', (req, res) => {
 		.then((userFound) => {
 			if(!userFound) res.send({ error: "User not exist!" })
 			else {
-				userFound.password = password;
-				userFound.avatar = avatar;
+				if(password) userFound.password = password;
+				if(avatar) userFound.avatar = avatar;
 				return userFound.save();
 			}
 		})

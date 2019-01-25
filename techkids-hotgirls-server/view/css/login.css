@@ -1,0 +1,16 @@
+.container{
+    background-color: pink;
+    height: 1000px;
+}
+#form-body{
+    width:30%;
+    height: 100%;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+#form-body button{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
